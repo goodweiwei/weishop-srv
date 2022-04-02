@@ -1,0 +1,2 @@
+# weishop-srv
+python,grpc
