@@ -44,7 +44,7 @@ def run_service():
     else:
         port = args.port
 
-    logger.add("user_srv/logs/user_srv_{time}.log")
+    logger.add("logs/user_srv_{time}.log")
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
