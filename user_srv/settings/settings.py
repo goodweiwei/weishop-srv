@@ -1,3 +1,7 @@
+import json
+
+import nacos
+from loguru import logger
 from playhouse.pool import PooledMySQLDatabase
 from playhouse.shortcuts import ReconnectMixin
 
@@ -6,12 +10,37 @@ class ReconnectMysqlDatabase(ReconnectMixin, PooledMySQLDatabase):
     pass
 
 
-# 数据库相关的配置
-DATABASE = "mxshop_user"
-DATABASE_HOST = "127.0.0.1"
-DATABASE_PORT = 3306
-DATABASE_USER = "root"
-DATABASE_PASSWORD = "root"
+NACOS = {
+    "Host": "127.0.0.1",
+    "Port": 8848,
+    "NameSpace": "4b0843edafd9994766e128b7ffe51e94",
+    "User": "nacos",
+    "Password": "nacos",
+    "DataId": "user-srv",
+    "Group": "dev"
+}
 
-DB = ReconnectMysqlDatabase(DATABASE, host=DATABASE_HOST, port=DATABASE_PORT, user=DATABASE_USER,
-                            password=DATABASE_PASSWORD)
+client = nacos.NacosClient(server_addresses=f"{NACOS['Host']}:{NACOS['Port']}",
+                           username=NACOS['User'], password=NACOS['Password'])
+
+# get config
+data = client.get_config(data_id=NACOS['DataId'], group=NACOS['Group'])
+data = json.loads(data)
+logger.info(data)
+
+
+def update_cfg(args):
+    print("配置产生变化")
+    print(args)
+
+
+# consul相关配置
+CONSUL_HOST = data["consul"]["host"]
+CONSUL_PORT = data["consul"]["port"]
+
+# 服务相关配置
+SERVICE_NAME = data["name"]
+SERVICE_TAGS = data["tags"]
+
+DB = ReconnectMysqlDatabase(data["mysql"]["db"], host=data["mysql"]["host"], port=data["mysql"]["port"],
+                            user=data["mysql"]["user"], password=data["mysql"]["password"])

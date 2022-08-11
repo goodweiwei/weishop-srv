@@ -30,6 +30,7 @@ class UserServicer(user_pb2_grpc.UserServicer):
 
     @logger.catch()
     def GetUserList(self, request, context):
+        # 获取用户列表
         rsp = user_pb2.UserListResponse()
         users = User.select()
         rsp.total = users.count()
@@ -47,6 +48,7 @@ class UserServicer(user_pb2_grpc.UserServicer):
 
     @logger.catch()
     def GetUserById(self, request, context):
+        # 通过id查询用户
         try:
             user = User.get(User.id == request.id)
             print(user)
@@ -58,6 +60,7 @@ class UserServicer(user_pb2_grpc.UserServicer):
 
     @logger.catch()
     def GetUserByMobile(self, request, context):
+        # 通过手机号查询用户
         try:
             print(request.mobile)
             user = User.get(User.mobile == request.mobile)
@@ -69,6 +72,7 @@ class UserServicer(user_pb2_grpc.UserServicer):
 
     @logger.catch()
     def CreatUser(self, request, context):
+        # 新建用户，表单验证由gin验证，这里没有必要进行表单验证
         try:
             User.get(User.mobile == request.mobile)
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)
@@ -86,6 +90,7 @@ class UserServicer(user_pb2_grpc.UserServicer):
 
     @logger.catch()
     def UpdateUser(self, request, context):
+        # 更新用户
         try:
             user = User.get(User.id == request.id)
             user.nick_name = request.nickName
@@ -100,4 +105,5 @@ class UserServicer(user_pb2_grpc.UserServicer):
 
     @logger.catch()
     def CheckPassWord(self, request, context):
+        # 检查密码
         return user_pb2.CheckResponse(success=pbkdf2_sha256.verify(request.password, request.encryptedPassword))
