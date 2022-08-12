@@ -13,7 +13,7 @@ class ReconnectMysqlDatabase(ReconnectMixin, PooledMySQLDatabase):
 NACOS = {
     "Host": "127.0.0.1",
     "Port": 8848,
-    "NameSpace": "4b0843edafd9994766e128b7ffe51e94",
+    "NameSpace": "620ebc22-16f5-431b-a6a2-da9079e141fb",
     "User": "nacos",
     "Password": "nacos",
     "DataId": "user-srv",
@@ -21,7 +21,7 @@ NACOS = {
 }
 
 client = nacos.NacosClient(server_addresses=f"{NACOS['Host']}:{NACOS['Port']}",
-                           username=NACOS['User'], password=NACOS['Password'])
+                           username=NACOS['User'], password=NACOS['Password'], namespace=NACOS["NameSpace"])
 
 # get config
 data = client.get_config(data_id=NACOS['DataId'], group=NACOS['Group'])
