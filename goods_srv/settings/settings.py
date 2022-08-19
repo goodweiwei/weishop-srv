@@ -6,6 +6,7 @@ from playhouse.pool import PooledMySQLDatabase
 from playhouse.shortcuts import ReconnectMixin
 
 
+# 使用peewee连接池，使用ReconnectMixin来防止出现连接断开查询失败
 class ReconnectMysqlDatabase(ReconnectMixin, PooledMySQLDatabase):
     pass
 
@@ -13,10 +14,10 @@ class ReconnectMysqlDatabase(ReconnectMixin, PooledMySQLDatabase):
 NACOS = {
     "Host": "82.157.166.247",
     "Port": 8848,
-    "NameSpace": "620ebc22-16f5-431b-a6a2-da9079e141fb",
+    "NameSpace": "05ef56f1-cf3c-4bcd-bbfc-86bdd9cc3fac",
     "User": "nacos",
     "Password": "nacos",
-    "DataId": "user-srv",
+    "DataId": "goods-srv",
     "Group": "dev"
 }
 
